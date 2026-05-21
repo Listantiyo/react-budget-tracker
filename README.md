@@ -46,7 +46,7 @@ Aplikasi ini menerapkan prinsip **Unidirectional Data Flow** (Aliran Data Satu A
 
 1. **Clone repository ini:**
 ```bash
-git clone [https://github.com/username/budget-tracker.git](https://github.com/Listantiyo/react-budget-tracker.git)
+git clone https://github.com/Listantiyo/react-budget-tracker.git
 cd budget-tracker
 
 ```

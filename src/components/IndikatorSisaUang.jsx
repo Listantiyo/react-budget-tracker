@@ -2,14 +2,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
-export default function IndikatorSisaUang(prop) {
+export default function IndikatorSisaUang({budget, expenses, categories}) {
   // Angka hardcode untuk simulasi logika budget
-  const TOTAL_BUDGET = prop.budget;
-  const TOTAL_SPENT = prop.spent;
+  const TOTAL_BUDGET = categories.reduce((prev, next) => prev + next.budget, 0);
+  const TOTAL_SPENT = expenses.reduce((prev, next) => prev + next.amount, 0);
   const REMAINING_BUDGET = TOTAL_BUDGET - TOTAL_SPENT;
 
   // Menghitung persentase sisa uang untuk progress bar
   const percentageLeft = (REMAINING_BUDGET / TOTAL_BUDGET) * 100;
+
+  console.log(TOTAL_BUDGET, TOTAL_SPENT, REMAINING_BUDGET);
 
   return (
     <Card className="w-full border-emerald-100 bg-emerald-50/30 dark:bg-emerald-950/10">
@@ -21,10 +23,10 @@ export default function IndikatorSisaUang(prop) {
       <CardContent className="space-y-4">
         <div className="flex items-baseline justify-between">
           <span className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
-            Rp {REMAINING_BUDGET.toLocaleString("id-ID")}
+            Rp {Number(REMAINING_BUDGET).toLocaleString("id-ID")}
           </span>
           <span className="text-sm text-muted-foreground">
-            dari Rp {TOTAL_BUDGET.toLocaleString("id-ID")}
+            dari Rp {Number(TOTAL_BUDGET).toLocaleString("id-ID")}
           </span>
         </div>
 

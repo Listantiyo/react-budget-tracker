@@ -1,52 +1,72 @@
-import FormInput from "@/components/FormInput";
-import DaftarPengeluaran from "@/components/DaftarPengeluaran";
-import IndikatorSisaUang from "@/components/IndikatorSisaUang";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import InitState from "@/Data"
 import { useState } from "react"
+import HalamanDashboard from "./components/HalamanDashboard";
+import HalamanForm from "./components/HalamanForm";
 
 export default function App() {
   /** @type {[State, React.Dispatch<React.SetStateAction<State>>]} */
-  const [state, setState] = useState(InitState);
-  const {dana, pengeluaran} = state;
+  const [expenses, setExpense] = useState(InitState);
+  const [categories, setCategory] = useState([
+    {id: "c1", name: "Makanan", budget: 50000},
+    {id: "c2", name: "Transportasi", budget: 20000}
+  ])
+  
+  const { dana, list } = expenses;
 
-  const spent_amount = pengeluaran.reduce((prev, next) => {
-    return prev + next.amount
-  }, 0)
-
-  const onSubmit = (data) => {
-    console.log(data)
+  const handleDeleteExpense = (id) => {
+    setExpense({...expenses, list: expenses.list.filter((prev) => prev.id !== id)})
+  }
+  const handleAddExpense = (newExpense) => {
+    setExpense({ ...expenses, list: [ ...expenses.list, newExpense ] });
+  }
+  const handleDeleteCategory = (id) => {
+    setCategory(categories.filter(cat => cat.id !== id));
+    setExpense({...expenses, list: expenses.list.filter(exp => exp.category_id !== id)});
   }
   return (
-    <main className="max-w-md mx-auto p-4 md:p-6 space-y-6">
-      <header className="space-y-1 text-center">
-        <h1 className="text-2xl font-bold tracking-tight">Budget Tracker</h1>
-        <p className="text-sm text-muted-foreground">
-          Kelola finansial harianmu dengan mudah.
-        </p>
-      </header>
-
-      <IndikatorSisaUang budget={state.dana} spent={spent_amount} />
-
-      <div className="space-y-6">
-        <FormInput state={state} setState={setState} />
-        <DaftarPengeluaran pengeluaran={pengeluaran} state={state} setState={setState}/>
+    <Router>
+      <div className="min-h-screen bg-background text-foreground antialiased">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HalamanDashboard
+                budget={dana}
+                expenses={list}
+                categories={categories}
+                onDeleteExpense={handleDeleteExpense}
+                onDeleteCategory={handleDeleteCategory}
+              />
+            }
+          />
+          <Route
+            path="/tambah"
+            element={
+              <HalamanForm
+                categories={categories}
+                onTambah={handleAddExpense}
+              />
+            }
+          />
+        </Routes>
       </div>
-    </main>
+    </Router>
   );
 }
 
 
 /**
  * @typedef {Object} Pengeluaran
- *  * @property {int} id
- * @property {string} nama_pengeluaran - Nama atau deskripsi pengeluaran.
+ * @property {int} id
+ * @property {string} name - Nama atau deskripsi pengeluaran.
  * @property {number} amount - Jumlah nominal pengeluaran.
  */
 
 /**
  * @typedef {Object} State
  * @property {number} dana - Total dana yang tersedia.
- * @property {Pengeluaran[]} pengeluaran - Daftar riwayat pengeluaran.
+ * @property {Pengeluaran[]} list - Daftar riwayat pengeluaran.
  */
 
 /** @type {State} */

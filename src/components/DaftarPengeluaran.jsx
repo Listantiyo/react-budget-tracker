@@ -10,43 +10,31 @@ const MOCK_EXPENSES = [
   { id: "3", name: "Langganan Spotify", amount: 55000 },
 ];
 
-export default function DaftarPengeluaran(prop) {
-  const pengeluaran = prop.pengeluaran;
-  const setState = prop.setState;
-  const state = prop.state;
-
-  const onDelete = (id) => {
-    const newState = {
-      ...state,
-      pengeluaran: state.pengeluaran.filter((value) => {
-        return value.id !== id;
-      }),
-    };
-    setState(newState);
-  }
+export default function DaftarPengeluaran({expenses, onDeleteExpense}) {
+  console.log(expenses)
   return (
     <div className="space-y-3 w-full">
       <h3 className="text-lg font-semibold px-1">Riwayat Pengeluaran</h3>
 
-      {pengeluaran.length === 0 ? (
+      {expenses.length === 0 ? (
         <p className="text-sm text-muted-foreground text-center py-4">
           Belum ada pengeluaran.
         </p>
       ) : (
         <div className="space-y-2">
-          {pengeluaran.map((expense) => (
+          {expenses.map((expense) => (
             <Card key={expense.id} className="overflow-hidden">
               <CardContent className="p-4 flex items-center justify-between">
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">
-                    {expense.nama_pengeluaran}
+                    {expense.name}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     Rp {expense.amount.toLocaleString("id-ID")}
                   </p>
                 </div>
                 <Button
-                  onClick={() => {onDelete(expense.id)}}
+                  onClick={() => {onDeleteExpense(expense.id);}}
                   variant="ghost"
                   size="icon"
                   className="text-destructive hover:text-destructive hover:bg-destructive/10"
